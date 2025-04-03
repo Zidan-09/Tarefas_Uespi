@@ -1,5 +1,11 @@
 from models import No, Item
 
+def criar():
+    no_cabeca = No(Item(None, None), None)
+    print('Lista criada com sucesso!')
+
+    return no_cabeca
+
 def VerificarOrdem(Lista):
     anterior = Lista
     temp = Lista.ponteiro
@@ -96,4 +102,80 @@ def Ordenar(Lista):
     return Lista
 
 def Inverter(Lista):
-    pass
+    primeiro = Lista.ponteiro
+
+    atual = primeiro.ponteiro
+    proximo = atual.ponteiro
+
+    while proximo != None:
+        atual.ponteiro = primeiro
+        primeiro = atual
+        atual = proximo
+        proximo = proximo.ponteiro
+
+        if proximo == None:
+            atual.ponteiro = primeiro
+            break
+    
+    Lista.ponteiro.ponteiro = None
+    Lista.ponteiro = atual
+
+    return Lista
+
+def InverterNova(Lista):
+    l2 = criar()
+
+    primeiro = Lista.ponteiro
+
+    atual = primeiro.ponteiro
+    proximo = atual.ponteiro
+
+    while proximo != None:
+        atual.ponteiro = primeiro
+        primeiro = atual
+        atual = proximo
+        proximo = proximo.ponteiro
+
+        if proximo == None:
+            atual.ponteiro = primeiro
+            break
+    
+    Lista.ponteiro.ponteiro = None
+    Lista.ponteiro = atual
+    l2.ponteiro = atual
+
+    return l2
+
+def Inserir(Lista, pos):
+        ordem, sentido = VerificarOrdem(Lista)
+
+        if not ordem:
+            Ordenar(Lista)
+            ordem, sentido = VerificarOrdem(Lista)
+        
+        try:
+            lista = Lista
+            temp = Lista
+
+            item = No(Item(int(input('Chave:')), int(input('Valor:'))), None)
+            if sentido == 'crescente':
+                while True:
+                    if temp.ponteiro.ponteiro.item.chave >= pos:
+                        item.ponteiro = temp.ponteiro
+                        temp.ponteiro = item
+                        print('Item inserido com sucesso!')
+                        Lista.quantidade += 1
+                        return lista
+                    temp = temp.ponteiro
+            elif sentido == 'decrescente':
+                while True:
+                    if temp.ponteiro.ponteiro.item.chave <= pos:
+                        item.ponteiro = temp.ponteiro
+                        temp.ponteiro = item
+                        print('Item inserido com sucesso!')
+                        Lista.quantidade += 1
+                        return lista
+                    temp = temp.ponteiro
+
+        except:
+            raise 'Erro'
