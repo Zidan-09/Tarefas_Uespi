@@ -32,22 +32,32 @@ for i in range(qty_soldados - 1):
 temp_no.ponteiro = primeiro[0]
 
 soldado_escolhido = int(input('Qual o soldado (id):'))
-vezes = int(input('Quantas vezes:'))
 
 nos = primeiro[0]
 
-for i in range(qty_soldados):
+while qty_soldados > 1:
 
     if nos.soldado.id == soldado_escolhido:
-        anterior = nos
-        for j in range(vezes):
-            anterior.ponteiro = nos
-            nos = nos.ponteiro
+        
+        while qty_soldados > 1:
 
-        anterior.ponteiro = nos.ponteiro
-        print(nos)
-        print(anterior.item.valor)
-        break
+            vezes = int(input('Quantas vezes:'))
+
+            for i in range(vezes):
+                anterior = nos
+                nos = nos.ponteiro
+
+            print(f'{nos} saiu!\n')
+
+            if nos == primeiro[0]:
+                primeiro[0] = nos.ponteiro
+
+            anterior.ponteiro = nos.ponteiro
+            qty_soldados -= 1
+            nos = anterior.ponteiro
+
+            if qty_soldados == 1:
+                print(f'Soldado escolhido: {nos}')
     else:
         anterior = nos
         nos = nos.ponteiro
