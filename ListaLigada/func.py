@@ -34,72 +34,7 @@ def VerificarOrdem(Lista):
         print('Lista não está ordenada.')
         return False, None
 
-def Ordenar(Lista):
-    ordem = input('Ordem crescente ou decrescente (c/d):')
-
-    if ordem == 'c':
-        while True:
-            trocou = False
-            anterior = None
-            atual = Lista.ponteiro
-
-            while atual != None and atual.ponteiro != None:
-                proximo = atual.ponteiro
-
-                if atual.item.chave > proximo.item.chave:
-                
-                    atual.ponteiro = proximo.ponteiro
-                    proximo.ponteiro = atual
-
-                    if anterior == None:
-                        Lista.ponteiro = proximo
-
-                    else:
-                        anterior.ponteiro = proximo
-
-                    trocou = True
-                    anterior = proximo
-
-                else:
-                    anterior = atual
-                    atual = atual.ponteiro
-
-            if not trocou:
-                break
-
-        return Lista
-    
-    elif ordem == 'd':
-        while True:
-            trocou = False
-            anterior = None
-            atual = Lista.ponteiro
-
-            while atual != None and atual.ponteiro != None:
-                proximo = atual.ponteiro
-
-                if atual.item.chave < proximo.item.chave:
-                
-                    atual.ponteiro = proximo.ponteiro
-                    proximo.ponteiro = atual
-
-                    if anterior == None:
-                        Lista.ponteiro = proximo
-
-                    else:
-                        anterior.ponteiro = proximo
-
-                    trocou = True
-                    anterior = proximo
-
-                else:
-                    anterior = atual
-                    atual = atual.ponteiro
-
-            if not trocou:
-                break
-
-    return Lista
+#Ordenar
 
 def Inverter(Lista):
     primeiro = Lista.ponteiro
@@ -142,7 +77,12 @@ def InverterNova(Lista):
     
     Lista.ponteiro.ponteiro = None
     Lista.ponteiro = atual
-    l2.ponteiro = atual
+
+    inserir = Lista
+
+    for _ in range(Lista.quantidade):
+        l2.Adicionar(No(Item(inserir.ponteiro.item.chave, inserir.ponteiro.item.valor), None))
+        inserir = inserir.ponteiro
 
     return l2
 
@@ -179,3 +119,92 @@ def Inserir(Lista, pos):
 
         except:
             raise 'Erro'
+
+def Remover(Lista, pos):
+        ordem, sentido = VerificarOrdem(Lista)
+
+        if not ordem:
+            Ordenar(Lista)
+            ordem, sentido = VerificarOrdem(Lista)
+        
+        try:
+            lista = Lista
+            temp = Lista
+            contador = 1
+
+            while True:
+                    if contador == pos:
+                        temp.ponteiro = temp.ponteiro.ponteiro
+                        print('Item removido com sucesso!')
+                        Lista.quantidade -= 1
+                        return lista
+                    temp = temp.ponteiro
+        
+        except:
+            raise 'Erro ao remover'
+
+def Imprimir(Lista):
+    temp = Lista
+    print('Itens da Lista:')
+    for _ in range(Lista.quantidade):
+        print(temp.ponteiro, end=' ')
+        temp = temp.ponteiro
+    print()
+
+def Copiar(Lista):
+    l2 = criar()
+
+    temp = Lista
+
+    for _ in range(Lista.quantidade):
+        l2.Adicionar(No(Item(temp.ponteiro.item.chave, temp.ponteiro.item.valor), None))
+        temp = temp.ponteiro
+
+    return l2
+
+def CopiarSemRepetir(Lista):
+    l2 = criar()
+
+    temp = Lista
+    valores = []
+
+    for _ in range(Lista.quantidade):
+        if temp.ponteiro.item.valor not in valores:
+            l2.Adicionar(No(Item(temp.ponteiro.item.chave, temp.ponteiro.item.valor), None))
+            valores.append(temp.ponteiro.item.valor)
+        temp = temp.ponteiro
+    
+    return l2
+
+def Contar(Lista):
+    print(f'A lista tem {Lista.quantidade} itens')
+
+def Intercalar(Lista1, Lista2):
+    l3 = criar()
+
+    temp1 = Lista1
+    temp2 = Lista2
+
+    c = 0
+
+    for _ in range(Lista1.quantidade + Lista2.quantidade):
+        if temp1.ponteiro != None and temp2.ponteiro != None:
+            if c % 2 == 0:
+                l3.Adicionar(No(Item(temp1.ponteiro.item.chave, temp1.ponteiro.item.valor), None))
+                temp1 = temp1.ponteiro
+                c += 1
+
+            elif c % 2 != 0:
+                l3.Adicionar(No(Item(temp2.ponteiro.item.chave, temp2.ponteiro.item.valor), None))
+                temp2 = temp2.ponteiro
+                c += 1
+        
+        elif temp1.ponteiro != None and temp2.ponteiro == None:
+            l3.Adicionar(No(Item(temp1.ponteiro.item.chave, temp1.ponteiro.item.valor), None))
+            temp1 = temp1.ponteiro
+        
+        elif temp1.ponteiro == None and temp2.ponteiro != None:
+            l3.Adicionar(No(Item(temp2.ponteiro.item.chave, temp2.ponteiro.item.valor), None))
+            temp2 = temp2.ponteiro
+    
+    return l3

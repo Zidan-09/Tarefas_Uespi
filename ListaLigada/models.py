@@ -20,7 +20,7 @@ class No:
             lista = self
             temp = self
 
-            while True:
+            for _ in range(self.quantidade + 1):
                 if temp.ponteiro == None:
                     temp.ponteiro = No
                     print('Item adicionado com sucesso!')
@@ -31,14 +31,14 @@ class No:
         except:
             raise 'Erro'
     
-    def Remover(self, Valor):
+    def Eliminar(self, Valor):
         try:
             lista = self
 
             temp = self.ponteiro
             anterior = self
 
-            while temp != None:
+            for _ in range(self.quantidade + 1):
                 if temp.item.valor == Valor:
                     anterior.ponteiro = temp.ponteiro
 
@@ -46,8 +46,8 @@ class No:
                     anterior = temp
                 temp = temp.ponteiro
 
-            print('Itens removidos com sucesso!')
+            print('Itens eliminados com sucesso!')
             return lista
         
         except:
-            raise 'Erro ao remover!'
+            raise 'Erro ao eliminar!'

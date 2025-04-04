@@ -5,15 +5,14 @@ l1 = criar()
 
 for i in range(int(input('Quantos itens:'))):
     l1.Adicionar(No(Item(int(input('Chave:')), int(input('Valor:'))), None))
+print('L1 feita')
 
-temp = l1.ponteiro
-while temp != None:
-    print(temp)
-    temp = temp.ponteiro
+l2 = criar()
 
-Inserir(l1, 5)
+for i in range(int(input('Quantos itens:'))):
+    l2.Adicionar(No(Item(int(input('Chave:')), int(input('Valor:'))), None))
+print('L2 feita')
 
-temp = l1.ponteiro
-while temp != None:
-    print(temp)
-    temp = temp.ponteiro
+l3 = Intercalar(l1, l2)
+
+Imprimir(l3)
