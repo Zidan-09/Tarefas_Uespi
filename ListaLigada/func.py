@@ -34,7 +34,26 @@ def VerificarOrdem(Lista):
         print('Lista não está ordenada.')
         return False, None
 
-#Ordenar
+def Ordenar(Lista): #Troca os ITENS
+    trocou = True
+
+    while trocou:
+        trocou = False
+
+        anterior = Lista.ponteiro
+        atual = anterior.ponteiro
+
+        while atual != None:
+            if anterior.item.chave > atual.item.chave:
+                temp = anterior.item
+                anterior.item = atual.item
+                atual.item = temp
+
+                trocou = True
+            
+            anterior = atual
+            atual = atual.ponteiro
+    return Lista
 
 def Inverter(Lista):
     primeiro = Lista.ponteiro
@@ -139,6 +158,7 @@ def Remover(Lista, pos):
                         Lista.quantidade -= 1
                         return lista
                     temp = temp.ponteiro
+                    contador += 1
         
         except:
             raise 'Erro ao remover'
