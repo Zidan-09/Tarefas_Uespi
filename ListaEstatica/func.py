@@ -63,22 +63,3 @@ def Ordenar(Lista):
                             trocou = True
 
     return Lista
-
-def Recuperar(Lista, chave):
-    procurou = True
-    meio = Lista.tamanho // 2
-
-    while procurou:
-        print(Lista.lista[meio:])
-        procurou = False
-
-        if chave > meio:
-            meio += meio // 2
-            procurou = True
-        elif chave < meio:
-            meio -= meio // 2
-            procurou = True
-        elif chave == meio:
-            print(Lista.lista[chave])
-        
-

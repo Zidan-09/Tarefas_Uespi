@@ -23,10 +23,12 @@ class ListaEstatica:
                         self.lista[i] = item
                         self.espaco -= 1
                         break
-            print('Item adicionado com sucesso!')
+                print('Item adicionado com sucesso!')
+            else:
+                print('Lista cheia!')
             return self
         except:
-            raise Error('Erro ao adicionar!')
+            raise Exception('Erro ao adicionar!')
 
     def Eliminar(self, valor):
         try:
@@ -36,4 +38,4 @@ class ListaEstatica:
                     self.espaco += 1
             return self
         except:
-            raise Error('Erro ao eliminar!')
+            raise Exception('Erro ao eliminar!')
