@@ -28,7 +28,7 @@ class Processador:
             print(i)
         print()
         
-    def turnAround(self):
+    def fifo(self):
         timeWaits = 0
         result = []
 
@@ -95,15 +95,45 @@ def executeProcess(processo):
     time.sleep(5)
     print(f"[Thread] Processo {processo.id:02} finalizado.")
 
+class execucao():
+    def inicio():
+        for i in range(1, int(input('\nQuantos processos você gostaria de adicionar?: ')) + 1):
+            core.addProcess(Processo(int(input('Insira o tamanho do processo: ')), i))
+
+        print('\n---------------------------------------------------------------')
+        core.showProcess();
+        print('---------------------------------------------------------------\n')
+
+    def metodo():
+        while True:
+            funcao = input('Qual algorítimo você gostaria de utilizar? (FIFO, SJF, FIFO com threads): ')
+
+            if (funcao == 'FIFO' or funcao == 'SJF' or funcao == 'FIFO com threads'):
+                break
+        if (funcao == 'FIFO'):
+            core.fifo();
+    
+        elif (funcao == 'SJF'):
+            core.sjf()
+    
+        else:
+            core.executeWithThreads();
+
+        while True:
+            continuar = input('Gostaria de usar outro método (M), inserir processos(P) ou fechar(F)?: ')
+
+            if (continuar == 'M' or continuar == 'P' or continuar == 'F'):
+                return continuar
+
 core = Processador()
 
-for i in range(1, int(input('Quantos processos você gostaria de adicionar?: ')) + 1):
-    core.addProcess(Processo(int(input('Insira o tamanho do processo: ')), i))
+while True:
+    execucao.inicio()
 
-core.showProcess()
+    resposta = execucao.metodo()
 
-core.turnAround()
-
-core.sjf()
-
-# core.executeWithThreads()
+    if resposta == 'M':
+        execucao.metodo()
+    elif resposta == 'F':
+        print('Simulação finalizada')
+        break
