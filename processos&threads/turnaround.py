@@ -49,7 +49,10 @@ class Processador:
             print(f'{i.processo.id:02}      {i.processo.size:02}      {i.turnAround:02}     {i.timeWait:02}')
         print()
 
-    def sfj(self):
+        print(f'Tempo médio de turnAround: {(timeWaits + self.processos[-1].size) / len(self.processos)}')
+        print(f'Tempo médio de timeWaits: {timeWaits / len(self.processos)}')
+
+    def sjf(self):
         timeWaits = 0
         result = []
         sortedList = sorted(self.processos, key=lambda p: p.size)
@@ -70,6 +73,9 @@ class Processador:
         for i in result:
             print(f'{i.processo.id:02}      {i.processo.size:02}      {i.turnAround:02}     {i.timeWait:02}')
         print()
+
+        print(f'Tempo médio de turnAround: {(timeWaits + sortedList[-1].size) / len(self.processos)}')
+        print(f'Tempo médio de timeWaits: {timeWaits / len(self.processos)}')
     
     def executeWithThreads(self):
         threads = []
@@ -98,6 +104,6 @@ core.showProcess()
 
 core.turnAround()
 
-core.sfj()
+core.sjf()
 
-core.executeWithThreads()
+# core.executeWithThreads()
