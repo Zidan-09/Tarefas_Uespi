@@ -34,6 +34,7 @@ class Processador:
                 result.append(Processado(processo, processo.size, 0))
             else:
                 result.append(Processado(processo, processo.size + timeWaits, timeWaits))
+                
             timeWaits += processo.size
 
         print('---------------------------------------------------------------')
@@ -41,6 +42,7 @@ class Processador:
         for i in result:
             print(f'{i.processo.id:02}      {i.processo.size:02}      {i.turnAround:02}     {i.timeWait:02}')
         print()
+        print('DEBUG', timeWaits)
         print(f'Tempo médio de turnAround: {(timeWaits + self.processos[-1].size) / len(self.processos):.2f}')
         print(f'Tempo médio de timeWaits: {timeWaits / len(self.processos):.2f}')
 
@@ -89,24 +91,14 @@ class Execucao:
 
     @staticmethod
     def metodo(core):
-        while True:
-            funcao = input('Qual algorítimo você gostaria de utilizar? (FIFO, SJF, FIFO com threads): ').upper()
-            if funcao in ['FIFO', 'SJF', 'FIFO COM THREADS']:
-                break
-            print("Método inválido. Tente novamente.")
-
-        if funcao == 'FIFO':
-            core.fifo()
-        elif funcao == 'SJF':
-            core.sjf()
-        else:
-            core.executeWithThreads()
+        core.fifo()
+        core.sjf()
 
         while True:
-            continuar = input('Gostaria de usar outro método (M), inserir processos (P) ou fechar (F)?: ').upper()
-            if continuar in ['M', 'P', 'F']:
+            continuar = input('Gostaria de reiniciar a simulação (R) ou fechar (F)?: ').upper()
+            if continuar in ['R', 'F']:
                 return continuar
-            print("Opção inválida. Digite M, P ou F.")
+            print("Opção inválida. Digite R ou F.")
 
 def main():
     core = Processador()
@@ -114,9 +106,7 @@ def main():
         Execucao.inicio(core)
         resposta = Execucao.metodo(core)
 
-        if resposta == 'M':
-            Execucao.metodo(core)
-        elif resposta == 'P':
+        if resposta == 'R':
             core = Processador()
         elif resposta == 'F':
             print('Simulação finalizada.')
