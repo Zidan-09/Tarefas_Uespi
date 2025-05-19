@@ -1,11 +1,8 @@
-import time
-import threading    
-
 class Processo:
     def __init__(self, size, id):
         self.id = id
         self.size = size
-    
+
     def __repr__(self):
         return f'ID = {self.id:02}, Size = {self.size:02}'
 
@@ -27,113 +24,103 @@ class Processador:
         for i in self.processos:
             print(i)
         print()
-        
+
     def fifo(self):
         timeWaits = 0
         result = []
 
-        for i in range(len(self.processos)):
+        for i, processo in enumerate(self.processos):
             if i == 0:
-                processado = Processado(self.processos[i], self.processos[i].size, 0)
-                result.append(processado)
-
+                result.append(Processado(processo, processo.size, 0))
             else:
-                processado = Processado(self.processos[i], self.processos[i].size + timeWaits, timeWaits)
-                result.append(processado)
-            
-            timeWaits += self.processos[i].size
+                result.append(Processado(processo, processo.size + timeWaits, timeWaits))
+            timeWaits += processo.size
 
         print('---------------------------------------------------------------')
         print('ID     SIZE     TA     TW')
         for i in result:
             print(f'{i.processo.id:02}      {i.processo.size:02}      {i.turnAround:02}     {i.timeWait:02}')
         print()
-
-        print(f'Tempo médio de turnAround: {(timeWaits + self.processos[-1].size) / len(self.processos)}')
-        print(f'Tempo médio de timeWaits: {timeWaits / len(self.processos)}')
+        print(f'Tempo médio de turnAround: {(timeWaits + self.processos[-1].size) / len(self.processos):.2f}')
+        print(f'Tempo médio de timeWaits: {timeWaits / len(self.processos):.2f}')
 
     def sjf(self):
         timeWaits = 0
         result = []
         sortedList = sorted(self.processos, key=lambda p: p.size)
-        
-        for i in range(len(self.processos)):
-            if i == 0:
-                processado = Processado(sortedList[i], sortedList[i].size, 0)
-                result.append(processado)
 
+        for i, processo in enumerate(sortedList):
+            if i == 0:
+                result.append(Processado(processo, processo.size, 0))
             else:
-                processado = Processado(sortedList[i], sortedList[i].size + timeWaits, timeWaits)
-                result.append(processado)
-            
-            timeWaits += sortedList[i].size
+                result.append(Processado(processo, processo.size + timeWaits, timeWaits))
+            timeWaits += processo.size
 
         print('---------------------------------------------------------------')
         print('ID     SIZE     TA     TW')
         for i in result:
             print(f'{i.processo.id:02}      {i.processo.size:02}      {i.turnAround:02}     {i.timeWait:02}')
         print()
+        print(f'Tempo médio de turnAround: {(timeWaits + sortedList[-1].size) / len(sortedList):.2f}')
+        print(f'Tempo médio de timeWaits: {timeWaits / len(sortedList):.2f}')
 
-        print(f'Tempo médio de turnAround: {(timeWaits + sortedList[-1].size) / len(self.processos)}')
-        print(f'Tempo médio de timeWaits: {timeWaits / len(self.processos)}')
-    
-    def executeWithThreads(self):
-        threads = []
+class Execucao:
+    @staticmethod
+    def inicio(core):
+        while True:
+            try:
+                qtd = int(input('\nQuantos processos você gostaria de adicionar?: '))
+                break
+            except ValueError:
+                print("Por favor, insira um número inteiro válido.")
 
-        for process in self.processos:
-            t = threading.Thread(target=executeProcess, args=(process,))
-            threads.append(t)
-            t.start()
-
-        for t in threads:
-            t.join()
-
-        print("Todos os processos foram executados.")
-
-def executeProcess(processo):
-    print(f"[Thread] Iniciando execução do processo {processo.id:02} (tamanho: {processo.size})")
-    time.sleep(5)
-    print(f"[Thread] Processo {processo.id:02} finalizado.")
-
-class execucao():
-    def inicio():
-        for i in range(1, int(input('\nQuantos processos você gostaria de adicionar?: ')) + 1):
-            core.addProcess(Processo(int(input('Insira o tamanho do processo: ')), i))
+        for i in range(1, qtd + 1):
+            while True:
+                try:
+                    size = int(input(f'Insira o tamanho do processo {i}: '))
+                    break
+                except ValueError:
+                    print("Tamanho inválido. Digite um número inteiro.")
+            core.addProcess(Processo(size, i))
 
         print('\n---------------------------------------------------------------')
-        core.showProcess();
+        core.showProcess()
         print('---------------------------------------------------------------\n')
 
-    def metodo():
+    @staticmethod
+    def metodo(core):
         while True:
-            funcao = input('Qual algorítimo você gostaria de utilizar? (FIFO, SJF, FIFO com threads): ')
-
-            if (funcao == 'FIFO' or funcao == 'SJF' or funcao == 'FIFO com threads'):
+            funcao = input('Qual algorítimo você gostaria de utilizar? (FIFO, SJF, FIFO com threads): ').upper()
+            if funcao in ['FIFO', 'SJF', 'FIFO COM THREADS']:
                 break
-        if (funcao == 'FIFO'):
-            core.fifo();
-    
-        elif (funcao == 'SJF'):
+            print("Método inválido. Tente novamente.")
+
+        if funcao == 'FIFO':
+            core.fifo()
+        elif funcao == 'SJF':
             core.sjf()
-    
         else:
-            core.executeWithThreads();
+            core.executeWithThreads()
 
         while True:
-            continuar = input('Gostaria de usar outro método (M), inserir processos(P) ou fechar(F)?: ')
-
-            if (continuar == 'M' or continuar == 'P' or continuar == 'F'):
+            continuar = input('Gostaria de usar outro método (M), inserir processos (P) ou fechar (F)?: ').upper()
+            if continuar in ['M', 'P', 'F']:
                 return continuar
+            print("Opção inválida. Digite M, P ou F.")
 
-core = Processador()
+def main():
+    core = Processador()
+    while True:
+        Execucao.inicio(core)
+        resposta = Execucao.metodo(core)
 
-while True:
-    execucao.inicio()
+        if resposta == 'M':
+            Execucao.metodo(core)
+        elif resposta == 'P':
+            core = Processador()
+        elif resposta == 'F':
+            print('Simulação finalizada.')
+            break
 
-    resposta = execucao.metodo()
-
-    if resposta == 'M':
-        execucao.metodo()
-    elif resposta == 'F':
-        print('Simulação finalizada')
-        break
+if __name__ == "__main__":
+    main()
