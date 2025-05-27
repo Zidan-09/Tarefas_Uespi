@@ -1,13 +1,15 @@
 class Processo:
-    def __init__(self, size, id):
+    def __init__(self, size, id, ordem):
         self.id = id
+        self.ordem = ordem
         self.size = size
 
     def __repr__(self):
-        return f'ID = {self.id:02}, Size = {self.size:02}'
+        return f'ID = {self.id:02}, Size = {self.size:02}, Ordem = {self.ordem}'
 
 class Processado:
-    def __init__(self, processo, turn, tw):
+    def __init__(self, processo, turn, tw, ordem):
+        self.ordem = ordem
         self.processo = processo
         self.turnAround = turn
         self.timeWait = tw
@@ -28,22 +30,28 @@ class Processador:
     def fifo(self):
         timeWaits = 0
         result = []
+        sorted = []
 
-        for i, processo in enumerate(self.processos):
+        for i in range(1, len(self.processos) + 1):
+            for o in self.processos:
+                if o.ordem == i:
+                    sorted.append(o)
+
+        for i, processo in enumerate(sorted):
             if i == 0:
-                result.append(Processado(processo, processo.size, 0))
+                result.append(Processado(processo, processo.size, 0, processo.ordem))
             else:
-                result.append(Processado(processo, processo.size + timeWaits, timeWaits))
+                result.append(Processado(processo, processo.size + timeWaits, timeWaits, processo.ordem))
                 
             timeWaits += processo.size
 
         print('---------------------------------------------------------------')
-        print('ID     SIZE     TA     TW')
+        print('              |FIFO|')
+        print('ID     SIZE     TA     TW     OD')
         for i in result:
-            print(f'{i.processo.id:02}      {i.processo.size:02}      {i.turnAround:02}     {i.timeWait:02}')
+            print(f'{i.processo.id:02}      {i.processo.size:02}      {i.turnAround:02}     {i.timeWait:02}     {i.ordem:02}')
         print()
-        print('DEBUG', timeWaits)
-        print(f'Tempo médio de turnAround: {(timeWaits + self.processos[-1].size) / len(self.processos):.2f}')
+        print(f'Tempo médio de turnAround: {timeWaits + sorted[-1].size / len(self.processos):.2f}')
         print(f'Tempo médio de timeWaits: {timeWaits / len(self.processos):.2f}')
 
     def sjf(self):
@@ -53,15 +61,16 @@ class Processador:
 
         for i, processo in enumerate(sortedList):
             if i == 0:
-                result.append(Processado(processo, processo.size, 0))
+                result.append(Processado(processo, processo.size, 0, processo.ordem))
             else:
-                result.append(Processado(processo, processo.size + timeWaits, timeWaits))
+                result.append(Processado(processo, processo.size + timeWaits, timeWaits, processo.ordem))
             timeWaits += processo.size
 
         print('---------------------------------------------------------------')
-        print('ID     SIZE     TA     TW')
+        print('               |SJF')
+        print('ID     SIZE     TA     TW     OD')
         for i in result:
-            print(f'{i.processo.id:02}      {i.processo.size:02}      {i.turnAround:02}     {i.timeWait:02}')
+            print(f'{i.processo.id:02}      {i.processo.size:02}      {i.turnAround:02}     {i.timeWait:02}     {i.ordem:02}')
         print()
         print(f'Tempo médio de turnAround: {(timeWaits + sortedList[-1].size) / len(sortedList):.2f}')
         print(f'Tempo médio de timeWaits: {timeWaits / len(sortedList):.2f}')
@@ -79,11 +88,11 @@ class Execucao:
         for i in range(1, qtd + 1):
             while True:
                 try:
-                    size = int(input(f'Insira o tamanho do processo {i}: '))
+                    size, ordem = map(int, input(f'Insira o tamanho (int) e ordem (int) (separados por espaço) do processo {i}: ').split())
                     break
                 except ValueError:
                     print("Tamanho inválido. Digite um número inteiro.")
-            core.addProcess(Processo(size, i))
+            core.addProcess(Processo(size, i, ordem))
 
         print('\n---------------------------------------------------------------')
         core.showProcess()
