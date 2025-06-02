@@ -44,15 +44,20 @@ class Processador:
                 result.append(Processado(processo, processo.size + timeWaits, timeWaits, processo.ordem))
                 
             timeWaits += processo.size
+        total_ta = 0
+        total_tw = 0
 
         print('---------------------------------------------------------------')
         print('              |FIFO|')
         print('ID     SIZE     TA     TW     OD')
         for i in result:
             print(f'{i.processo.id:02}      {i.processo.size:02}      {i.turnAround:02}     {i.timeWait:02}     {i.ordem:02}')
+            total_ta += i.turnAround
+            total_tw += i.timeWait
+
         print()
-        print(f'Tempo médio de turnAround: {timeWaits + sorted[-1].size / len(self.processos):.2f}')
-        print(f'Tempo médio de timeWaits: {timeWaits / len(self.processos):.2f}')
+        print(f'Tempo médio de turnAround: {total_ta / len(self.processos):.2f}')
+        print(f'Tempo médio de timeWaits: {total_tw / len(self.processos):.2f}')
 
     def sjf(self):
         timeWaits = 0
@@ -66,14 +71,19 @@ class Processador:
                 result.append(Processado(processo, processo.size + timeWaits, timeWaits, processo.ordem))
             timeWaits += processo.size
 
+        total_ta = 0
+        total_tw = 0
+
         print('---------------------------------------------------------------')
         print('               |SJF')
         print('ID     SIZE     TA     TW     OD')
         for i in result:
             print(f'{i.processo.id:02}      {i.processo.size:02}      {i.turnAround:02}     {i.timeWait:02}     {i.ordem:02}')
+            total_ta += i.turnAround
+            total_tw += i.timeWait
         print()
-        print(f'Tempo médio de turnAround: {(timeWaits + sortedList[-1].size) / len(sortedList):.2f}')
-        print(f'Tempo médio de timeWaits: {timeWaits / len(sortedList):.2f}')
+        print(f'Tempo médio de turnAround: {total_ta / len(sortedList):.2f}')
+        print(f'Tempo médio de timeWaits: {total_tw / len(sortedList):.2f}')
 
 class Execucao:
     @staticmethod
