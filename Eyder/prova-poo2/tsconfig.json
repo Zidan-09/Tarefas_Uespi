@@ -1,0 +1,17 @@
+{
+    "compilerOptions": {
+      "target": "ES2021",
+      "module": "NodeNext",
+      "moduleResolution": "nodenext",
+      "resolveJsonModule": true,
+      "baseUrl": "./src",
+      "paths": {
+        "../*" : ["*"]
+      },
+      "outDir": "./build",
+      "sourceMap": true,
+      "strict": true,
+      "esModuleInterop": true
+    },
+    "include": ["src/**/*", "src/entities/.ts"]
+}  
